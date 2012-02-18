@@ -1,5 +1,7 @@
 package org.wintrisstech.irobot.ioio;
 
+import ioio.lib.api.exception.ConnectionLostException;
+
 /**
  * A concrete class that provides a default implementation of the
  * IRobotCreateInterface. It is a convenience class intended to be extended in
@@ -27,23 +29,23 @@ public class IRobotCreateAdapter implements IRobotCreateInterface {
         this.delegate = delegate;
     }
 
-    public void demo(int demoType) {
+    public void demo(int demoType) throws ConnectionLostException {
         delegate.demo(demoType);
     }
 
-    public void setDigitalOutputs(boolean pin0High, boolean pin1High, boolean pin2High) {
+    public void setDigitalOutputs(boolean pin0High, boolean pin1High, boolean pin2High) throws ConnectionLostException {
         delegate.setDigitalOutputs(pin0High, pin1High, pin2High);
     }
 
-    public void drive(int velocity, int radius) {
+    public void drive(int velocity, int radius) throws ConnectionLostException {
         delegate.drive(velocity, radius);
     }
 
-    public void driveDirect(int rightVelocity, int leftVelocity) {
+    public void driveDirect(int rightVelocity, int leftVelocity) throws ConnectionLostException {
         delegate.driveDirect(rightVelocity, leftVelocity);
     }
 
-    public void full() {
+    public void full() throws ConnectionLostException {
         delegate.full();
     }
 
@@ -235,63 +237,63 @@ public class IRobotCreateAdapter implements IRobotCreateInterface {
         return delegate.isWheelDropRight();
     }
 
-    public void leds(boolean powerLedOn, boolean playLedOn, boolean advanceLedOn) {
+    public void leds(boolean powerLedOn, boolean playLedOn, boolean advanceLedOn) throws ConnectionLostException {
         delegate.leds(powerLedOn, playLedOn, advanceLedOn);
     }
 
-    public void leds(int powerColor, int powerIntensity, boolean playLedOn, boolean advanceLedOn) {
+    public void leds(int powerColor, int powerIntensity, boolean playLedOn, boolean advanceLedOn) throws ConnectionLostException {
         delegate.leds(powerColor, powerIntensity, playLedOn, advanceLedOn);
     }
 
-    public void ledsToggle(boolean togglePower, boolean togglePlay, boolean toggleAdvance) {
+    public void ledsToggle(boolean togglePower, boolean togglePlay, boolean toggleAdvance) throws ConnectionLostException {
         delegate.ledsToggle(togglePower, togglePlay, toggleAdvance);
     }
 
-    public void lowSideDrivers(boolean lowSideDriver0On, boolean lowSideDriver1On, boolean lowSideDriver2On) {
+    public void lowSideDrivers(boolean lowSideDriver0On, boolean lowSideDriver1On, boolean lowSideDriver2On) throws ConnectionLostException {
         delegate.lowSideDrivers(lowSideDriver0On, lowSideDriver1On, lowSideDriver2On);
     }
 
-    public void playScript(byte[] script) {
+    public void playScript(byte[] script) throws ConnectionLostException {
         delegate.playScript(script);
     }
 
-    public void playSong(int songNumber) {
+    public void playSong(int songNumber) throws ConnectionLostException {
         delegate.playSong(songNumber);
     }
 
-    public void pwmLowSideDrivers(int lowSideDriver0DutyCycle, int lowSideDriver1DutyCycle, int lowSideDriver2DutyCycle) {
+    public void pwmLowSideDrivers(int lowSideDriver0DutyCycle, int lowSideDriver1DutyCycle, int lowSideDriver2DutyCycle) throws ConnectionLostException {
         delegate.pwmLowSideDrivers(lowSideDriver0DutyCycle, lowSideDriver1DutyCycle, lowSideDriver2DutyCycle);
     }
 
-    public void readSensors(int sensorId) {
+    public void readSensors(int sensorId) throws ConnectionLostException {
         delegate.readSensors(sensorId);
     }
 
-    public void readSensors(int[] sensorIds) {
+    public void readSensors(int[] sensorIds) throws IllegalArgumentException, ConnectionLostException {
         delegate.readSensors(sensorIds);
     }
 
-    public void safe() {
+    public void safe() throws ConnectionLostException {
         delegate.safe();
     }
 
-    public void sendIr(int byteValue) {
+    public void sendIr(int byteValue) throws ConnectionLostException {
         delegate.sendIr(byteValue);
     }
 
-    public int[] showScript() {
+    public int[] showScript() throws ConnectionLostException {
         return delegate.showScript();
     }
 
-    public void song(int songNumber, int[] notesAndDurations) {
+    public void song(int songNumber, int[] notesAndDurations) throws ConnectionLostException {
         delegate.song(songNumber, notesAndDurations);
     }
 
-    public void song(int songNumber, int[] notesAndDurations, int startIndex, int length) {
+    public void song(int songNumber, int[] notesAndDurations, int startIndex, int length) throws ConnectionLostException {
         delegate.song(songNumber, notesAndDurations, startIndex, length);
     }
 
-    public void waitButtonPressed(boolean playButton, boolean beep) {
+    public void waitButtonPressed(boolean playButton, boolean beep) throws ConnectionLostException {
         delegate.waitButtonPressed(playButton, beep);
     }
 
