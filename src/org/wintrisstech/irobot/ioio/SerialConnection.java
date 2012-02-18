@@ -10,8 +10,10 @@ import java.io.OutputStream;
 
 /**
  * This class represents the communication channel between the IOIO board and
- * the Create. At most one instance of this class may be instantiated. Use the
- * {@link #getIOIO(boolean) getIOIO(boolean debug)} method to get that instance.
+ * the iRobot Create. At most one instance of this class may be instantiated.
+ * Use the
+ * {@link #getInstance(IOIO, boolean) getInsatnce(IOIO ioio, boolean debug)}
+ * method to get that instance.
  *
  */
 final class SerialConnection { //Note: Package-private class
@@ -38,11 +40,10 @@ final class SerialConnection { //Note: Package-private class
     }
 
     /**
-     * Gets a default serial connection to the Create using pin D0 and D1 on the
-     * EDemoBoard for UART and pin D2 as the baud rate change pin to the Create.
-     * This method returns after a connection between the EdemoBoard and the
-     * Create has been established.
+     * Gets a default serial connection to the Create. This method returns after
+     * a connection between the IOIO and the Create has been established.
      *
+     * @param ioio the ioio instance used to connect to the Create
      * @param debug if true establishes a connection that prints out debugging
      * information.
      * @return a serial connection to the Create
@@ -56,7 +57,8 @@ final class SerialConnection { //Note: Package-private class
             theConnection.connectToCreate();
         } catch (Exception e) {
             if (debug) {
-                Log.d(TAG, "Try connecting one more time in case user forgot to turn on the Create");
+                Log.d(TAG, "Try connecting one more time in case user forgot to "
+                        + "turn on the Create");
             }
             try {
                 Thread.sleep(2500);
@@ -70,9 +72,6 @@ final class SerialConnection { //Note: Package-private class
 
 //     Sends the start command to the Create
     private void connectToCreate() throws ConnectionLostException, IOException {
-        if (debug) {
-            Log.d(TAG, "Triggering baud rate select pin");
-        }
         uart = theConnection.ioio.openUart(CREATE_RX_PIN, CREATE_TX_PIN, BAUD_RATE, Uart.Parity.NONE, Uart.StopBits.ONE);
         input = uart.getInputStream();
         output = uart.getOutputStream();

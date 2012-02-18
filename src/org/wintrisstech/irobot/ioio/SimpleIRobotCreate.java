@@ -9,15 +9,15 @@ import java.io.IOException;
  * A final class that provides a high level interface to the iRobot series of
  * Roomba/Create robots.
  *
- * The names of most of the readSensors are derived mostly from the <a
+ * <p>The names of most of the readSensors are derived mostly from the <a
  * href=../../../../Create%20Open%20Interface_v2.pdf> Create Open
  * Interface_v2.pdf</a>. Recommend reading this document in order to get a
- * better understanding of how to work witht the robot. <p> Note: The default
+ * better understanding of how to work with the robot. <p> Note: The default
  * constructor will not return until it has managed to connect with the Create
- * via the default D0/D1/D2 serial interface from the Sun SPOT to the create.
- * This means that once you have received the instance, you are ok to control
- * the robot. <p> <b>NOTE:</b> This class is final; it cannot be extended.
- * Extend
+ * via the default serial interface from the IOIO to the create. This means that
+ * once you have received the instance, you are ok to control the robot.
+ *
+ * <p> <b>NOTE:</b> This class is final; it cannot be extended. Extend
  * {@link IRobotCreateAdapter IRobotCreateAdapter} instead.
  */
 public final class SimpleIRobotCreate implements IRobotCreateInterface {
@@ -290,10 +290,11 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
     private boolean isAdvanceLedOn;
 
     /**
-     * Constructor that uses the default configuration of using the EDemoBoard
-     * for UART and uses pin D2 as the baud rate change pin to the iRobot
+     * Constructor that uses the IOIO instance to communicate with the iRobot
      * Create. Equivalent to using
-     * <code>SimpleIRobotCreate(false, true, true)</code>
+     * <code>SimpleIRobotCreate(ioio, false, true, true)</code>
+     *
+     * @param ioio The IOIO instance used to communicate with the Create
      *
      * @see #SimpleIRobotCreate(boolean, boolean, boolean)
      */
@@ -303,9 +304,10 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
     }
 
     /**
-     * Constructor that uses the default configuration of using the EDemoBoard
-     * for UART and pin D2 as the baud rate change pin to the iRobot Create.
+     * Constructor that uses the IOIO instance to communicate with the iRobot
+     * Create.
      *
+     * @param ioio The IOIO instance used to communicate with the Create
      * @param debugSerial if true will create a default serial connection with
      * debug true
      * @param fullMode if true enter full mode, otherwise enter safe mode
