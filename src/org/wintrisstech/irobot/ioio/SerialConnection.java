@@ -130,7 +130,7 @@ final class SerialConnection { //Note: Package-private class
         try {
             int result = input.read();
             if (result > 0x7F) {
-                result -= 0xFF;
+                result -= 0x100;
             }
             if (debug) {
                 Log.d(TAG, String.format("Read signed byte: %d", result));
@@ -174,7 +174,7 @@ final class SerialConnection { //Note: Package-private class
             // Java is already twos complement, so no need for any translation
             int signed = (high << 8) | (low & 0xFF);
             if (signed > 0x7FFF) {
-                signed -= 0xFFFF;
+                signed -= 0x10000;
             }
             if (debug) {
                 Log.d(TAG, String.format("Read signed word: %d|%d = %d", high, low, signed));
