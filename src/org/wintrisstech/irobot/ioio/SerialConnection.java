@@ -129,7 +129,7 @@ final class SerialConnection { //Note: Package-private class
     int readSignedByte() throws ConnectionLostException {
         try {
             int result = input.read();
-            if (result > 0xEF) {
+            if (result > 0x7F) {
                 result -= 0xFF;
             }
             if (debug) {
@@ -173,7 +173,7 @@ final class SerialConnection { //Note: Package-private class
             int low = input.read();
             // Java is already twos complement, so no need for any translation
             int signed = (high << 8) | (low & 0xFF);
-            if (signed > 0xEFFF) {
+            if (signed > 0x7FFF) {
                 signed -= 0xFFFF;
             }
             if (debug) {
