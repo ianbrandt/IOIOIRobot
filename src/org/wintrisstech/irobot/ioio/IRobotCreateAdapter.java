@@ -29,19 +29,23 @@ public class IRobotCreateAdapter implements IRobotCreateInterface {
         this.delegate = delegate;
     }
 
-    public void demo(int demoType) throws ConnectionLostException {
+    public void demo(int demoType)
+            throws ConnectionLostException {
         delegate.demo(demoType);
     }
 
-    public void setDigitalOutputs(boolean pin0High, boolean pin1High, boolean pin2High) throws ConnectionLostException {
+    public void setDigitalOutputs(boolean pin0High, boolean pin1High, boolean pin2High)
+            throws ConnectionLostException {
         delegate.setDigitalOutputs(pin0High, pin1High, pin2High);
     }
 
-    public void drive(int velocity, int radius) throws ConnectionLostException {
+    public void drive(int velocity, int radius)
+            throws ConnectionLostException {
         delegate.drive(velocity, radius);
     }
 
-    public void driveDirect(int rightVelocity, int leftVelocity) throws ConnectionLostException {
+    public void driveDirect(int rightVelocity, int leftVelocity)
+            throws ConnectionLostException {
         delegate.driveDirect(rightVelocity, leftVelocity);
     }
 

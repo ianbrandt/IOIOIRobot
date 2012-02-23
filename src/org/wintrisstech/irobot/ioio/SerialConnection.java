@@ -1,5 +1,6 @@
 package org.wintrisstech.irobot.ioio;
 
+import android.os.SystemClock;
 import android.util.Log;
 import ioio.lib.api.IOIO;
 import ioio.lib.api.Uart;
@@ -49,7 +50,7 @@ final class SerialConnection { //Note: Package-private class
      * @return a serial connection to the Create
      */
     static SerialConnection getInstance(IOIO ioio, boolean debug)
-            throws ConnectionLostException, InterruptedException {
+            throws ConnectionLostException {
         theConnection.ioio = ioio;
         theConnection.debug = debug;
 //        new BootloaderListener().start();
@@ -60,10 +61,7 @@ final class SerialConnection { //Note: Package-private class
                 Log.d(TAG, "Try connecting one more time in case user forgot to "
                         + "turn on the Create");
             }
-            try {
-                Thread.sleep(2500);
-            } catch (InterruptedException ex) {
-            }
+            SystemClock.sleep(2500);
             theConnection.connectToCreate();
         }
 
@@ -88,10 +86,7 @@ final class SerialConnection { //Note: Package-private class
             uartBuffer[0] = (byte) SENSOR_COMMAND;
             uartBuffer[1] = (byte) SENSORS_OI_MODE;
             writeBytes(uartBuffer, 0, 2);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-            }
+            SystemClock.sleep(100);
             int mode = readUnsignedByte();
             if (mode == OI_MODE_PASSIVE) {
                 break;
@@ -130,7 +125,7 @@ final class SerialConnection { //Note: Package-private class
         try {
             int result = input.read();
             if (result > 0x7F) {
-                result -= 0x100;
+                result -= 0xFF;
             }
             if (debug) {
                 Log.d(TAG, String.format("Read signed byte: %d", result));
@@ -167,12 +162,12 @@ final class SerialConnection { //Note: Package-private class
      * @return the value as an int
      * @throws ConnectionLostException
      */
-    int readSignedWord() throws ConnectionLostException  {
+    int readSignedWord() throws ConnectionLostException {
         try {
-            int high = input.read();
-            int low = input.read();
-            // Java is already twos complement, so no need for any translation
-            int signed = (high << 8) | (low & 0xFF);
+            int high = input.read(); // 0 <= high <= 0xFF
+            int low = input.read(); // 0 <= low <= 0xFF
+            int signed = (high << 8) | low; // 0 <= signed <= 0xFFFF
+            // Convert signed to a signed value:
             if (signed > 0x7FFF) {
                 signed -= 0x10000;
             }
@@ -196,7 +191,7 @@ final class SerialConnection { //Note: Package-private class
      * @return the number of bytes received
      * @throws ConnectionLostException
      */
-    int readUnsignedBytes(int[] buffer, int start, int length) throws ConnectionLostException  {
+    int readUnsignedBytes(int[] buffer, int start, int length) throws ConnectionLostException {
         try {
             if (debug) {
                 Log.d(TAG, String.format("Read unsigned bytes: %d", length));
@@ -226,11 +221,11 @@ final class SerialConnection { //Note: Package-private class
      * @return the value as an int
      * @throws ConnectionLostException
      */
-    int readUnsignedWord() throws ConnectionLostException  {
+    int readUnsignedWord() throws ConnectionLostException {
         try {
-            int high = input.read();
-            int low = input.read();
-            int unsigned = ((high & 0xFF) << 8) | (low & 0xFF);
+            int high = input.read(); // 0 <= high <= 0xFF
+            int low = input.read(); // 0 <= low <= 0xFF
+            int unsigned = (high << 8) | low; // 0 <= unsigned <= 0xFFFF
             if (debug) {
                 Log.d(TAG, String.format("Read unsigned word: %d|%d = %", high, low, unsigned));
             }
@@ -246,7 +241,7 @@ final class SerialConnection { //Note: Package-private class
      * @param b the byte sent
      * @throws ConnectionLostException
      */
-    void writeByte(int b) throws ConnectionLostException  {
+    void writeByte(int b) throws ConnectionLostException {
         try {
             if (debug) {
                 Log.d(TAG, String.format("Sending byte: %d", b));
@@ -287,7 +282,7 @@ final class SerialConnection { //Note: Package-private class
      * @param length the number of bytes sent.
      * @throws ConnectionLostException
      */
-    void writeBytes(int[] ints, int start, int length) throws ConnectionLostException  {
+    void writeBytes(int[] ints, int start, int length) throws ConnectionLostException {
         try {
             if (debug) {
                 Log.d(TAG, String.format("Sending bytes byte[] length: %d", length));
@@ -314,7 +309,7 @@ final class SerialConnection { //Note: Package-private class
      * @param value an int in the range -32768 - 32767.
      * @throws ConnectionLostException
      */
-    public void writeSignedWord(int value) throws ConnectionLostException  {
+    public void writeSignedWord(int value) throws ConnectionLostException {
         try {
             // Java bit representation is already two's complement
             uartBuffer[0] = (byte) (value >> 8);
@@ -349,7 +344,7 @@ final class SerialConnection { //Note: Package-private class
     }
 
     /**
-     * Closes the serial connection 
+     * Closes the serial connection
      */
     public void close() {
         Log.i(TAG, "Closing connection");

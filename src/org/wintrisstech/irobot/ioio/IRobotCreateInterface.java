@@ -584,6 +584,7 @@ public interface IRobotCreateInterface {
      *
      * @param demoId one of the DEMO_* constants
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void demo(int demoId) throws ConnectionLostException;
 
@@ -607,9 +608,11 @@ public interface IRobotCreateInterface {
      * to 500
      * @param radius the turn radius in mm. Range is -2000 to 2000<br>
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      *
      */
-    public void drive(int velocity, int radius) throws ConnectionLostException;
+    public void drive(int velocity, int radius) 
+            throws ConnectionLostException;
 
     /**
      * This method lets you control the forward and backward motion of the
@@ -620,9 +623,11 @@ public interface IRobotCreateInterface {
      * @param rightVelocity Right wheel velocity in mm/s. Range is -500 to 500
      * @param leftVelocity Left wheel velocity in mm/s. Range is -500 to 500
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      *
      */
-    public void driveDirect(int rightVelocity, int leftVelocity) throws ConnectionLostException;
+    public void driveDirect(int rightVelocity, int leftVelocity) 
+            throws ConnectionLostException;
 
     /**
      * This method gives you complete control over the Create by putting the OI
@@ -635,6 +640,7 @@ public interface IRobotCreateInterface {
      * Note: Before invoking this method a connection to the Create must have
      * been established.
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void full() throws ConnectionLostException;
 
@@ -1284,9 +1290,10 @@ public interface IRobotCreateInterface {
      * @param playLedOn when true turns Play LED on
      * @param advanceLedOn when true turns Advance LED on
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void leds(boolean powerLedOn, boolean playLedOn, boolean advanceLedOn)
-            throws ConnectionLostException, InterruptedException;
+            throws ConnectionLostException;
 
     /**
      * This method controls the LEDs on the Create. The state of the Play and
@@ -1303,9 +1310,10 @@ public interface IRobotCreateInterface {
      * @param playLedOn when true turn Play LED on.
      * @param advanceLedOn when true turn Advance LED on.
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void leds(int powerColor, int powerIntensity, boolean playLedOn, boolean advanceLedOn)
-            throws ConnectionLostException, InterruptedException;
+            throws ConnectionLostException;
 
     /**
      * Toggles the Power, Play and Advance LEDs.
@@ -1314,9 +1322,10 @@ public interface IRobotCreateInterface {
      * @param togglePlay if true toggles the on-off state of the Play LED
      * @param toggleAdvance if true toggles the on-off state of the Advance LED
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void ledsToggle(boolean togglePower, boolean togglePlay, boolean toggleAdvance)
-            throws ConnectionLostException, InterruptedException;
+            throws ConnectionLostException;
 
     /**
      * This method lets you control the three low side drivers. The state of
@@ -1330,6 +1339,7 @@ public interface IRobotCreateInterface {
      * @param lowSideDriver1On true turns Low Side Driver 1 on.
      * @param lowSideDriver2On true turns Side Driver 2 on.
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void lowSideDrivers(boolean lowSideDriver0On, boolean lowSideDriver1On, boolean lowSideDriver2On)
             throws ConnectionLostException;
@@ -1349,6 +1359,7 @@ public interface IRobotCreateInterface {
      *
      * @param script a byte array of commands and their respective arguments.
      * @throws ConnectionLostException
+     * @throws InterruptedException 
      * @see <a href=../../../../resources/Create%20Open%20Interface_v2.pdf>
      * Create Open Interface_v2.pdf</a>
      */
@@ -1363,6 +1374,7 @@ public interface IRobotCreateInterface {
      *
      * @param songNumber the number of the song the Create is to play.
      * @throws ConnectionLostException
+     * @throws InterruptedException 
      * @see #song(int, int[])
      * @see #song(int, int[], int, int)
      */
@@ -1378,6 +1390,7 @@ public interface IRobotCreateInterface {
      * @param lowSideDriver1DutyCycle Duty cycle for low side driver 1 (0 - 128)
      * @param lowSideDriver2DutyCycle Duty cycle for low side driver 2 (0 - 128)
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void pwmLowSideDrivers(int lowSideDriver0DutyCycle, int lowSideDriver1DutyCycle, int lowSideDriver2DutyCycle)
             throws ConnectionLostException;
@@ -1391,6 +1404,7 @@ public interface IRobotCreateInterface {
      *
      * @param sensorId One of the SENSORS_* constants
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void readSensors(int sensorId) throws ConnectionLostException;
 
@@ -1404,6 +1418,7 @@ public interface IRobotCreateInterface {
      * @param sensorIds An array of the SENSORS_* constants.
      * @throws IllegalArgumentException if the array of sensorIds is too long.
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void readSensors(int[] sensorIds)
             throws IllegalArgumentException, ConnectionLostException;
@@ -1413,6 +1428,7 @@ public interface IRobotCreateInterface {
      * off all LEDs. The OI can be in Passive, Safe, or Full mode to accept this
      * command.
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void safe() throws ConnectionLostException;
 
@@ -1423,6 +1439,7 @@ public interface IRobotCreateInterface {
      *
      * @param irValue A value to send (0 - 255)
      * @throws ConnectionLostException
+     * @throws InterruptedException 
      * @see #getInfraredByte()
      */
     public void sendIr(int irValue) throws ConnectionLostException;
@@ -1438,6 +1455,7 @@ public interface IRobotCreateInterface {
      * @param pin2High if true sets the output of the third digital output to
      * high
      * @throws ConnectionLostException
+     * @throws InterruptedException
      */
     public void setDigitalOutputs(boolean pin0High, boolean pin1High, boolean pin2High)
             throws ConnectionLostException;
@@ -1448,6 +1466,7 @@ public interface IRobotCreateInterface {
      *
      * @return an int array containing the script.
      * @throws ConnectionLostException
+     * @throws InterruptedException 
      * @see #playScript(byte[])
      * @see <a href=../../../../Create%20Open%20Interface_v2.pdf> Create Open
      * Interface_v2.pdf</a>
@@ -1475,6 +1494,7 @@ public interface IRobotCreateInterface {
      * and 255 and the total length of the array must be 32 or less (max 16
      * notes).
      * @throws ConnectionLostException
+     * @throws InterruptedException
      *
      * @see #playSong(int)
      * @see #song(int, int[])
@@ -1506,6 +1526,7 @@ public interface IRobotCreateInterface {
      * @param startIndex an index into an int array specifying the first note
      * @param length an even number less than or equal to 32 (max 16 notes).
      * @throws ConnectionLostException
+     * @throws InterruptedException 
      * @see #playSong(int)
      * @see #song(int, int[])
      * @see <a href=../../../../Create%20Open%20Interface_v2.pdf> Create Open
@@ -1533,10 +1554,12 @@ public interface IRobotCreateInterface {
      *
      * @param playButton If true wait for the play button, otherwise wait for
      * the advance button
+     * @param beep 
      * @throws ConnectionLostException
+     * @throws InterruptedException  
      */
     public void waitButtonPressed(boolean playButton, boolean beep)
-            throws ConnectionLostException, InterruptedException;
+            throws ConnectionLostException;
 
     /**
      * Closes the serial connection to the Create

@@ -1,9 +1,9 @@
 package org.wintrisstech.irobot.ioio;
 
+import android.os.SystemClock;
 import android.util.Log;
 import ioio.lib.api.IOIO;
 import ioio.lib.api.exception.ConnectionLostException;
-import java.io.IOException;
 
 /**
  * A final class that provides a high level interface to the iRobot series of
@@ -296,13 +296,14 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
      *
      * @param ioio The IOIO instance used to communicate with the Create
      *
+     * @throws ConnectionLostException 
+     * @throws InterruptedException 
      * @see #SimpleIRobotCreate(boolean, boolean, boolean)
      */
     public SimpleIRobotCreate(IOIO ioio)
-            throws ConnectionLostException, InterruptedException {
+            throws ConnectionLostException {
         this(ioio, false, true, true);
     }
-    
 
     /**
      * Constructor that uses the IOIO instance to communicate with the iRobot
@@ -313,9 +314,11 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
      * debug true
      * @param fullMode if true enter full mode, otherwise enter safe mode
      * @param waitButton if true wait until play button is pressed
+     * @throws ConnectionLostException 
+     * @throws InterruptedException  
      */
     public SimpleIRobotCreate(IOIO ioio, boolean debugSerial, boolean fullMode, boolean waitButton)
-            throws ConnectionLostException, InterruptedException {
+            throws ConnectionLostException {
         this(SerialConnection.getInstance(ioio, debugSerial), fullMode, waitButton);
     }
 
@@ -328,8 +331,8 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
      * @param waitButton if true wait until play button is pressed
      * @throws ConnectionLostException
      */
-    SimpleIRobotCreate(SerialConnection sc, boolean fullMode, boolean waitButton) 
-            throws ConnectionLostException, InterruptedException {
+    SimpleIRobotCreate(SerialConnection sc, boolean fullMode, boolean waitButton)
+            throws ConnectionLostException {
         this.serialConnection = sc;
         if (fullMode) {
             full();
@@ -341,61 +344,42 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
         }
     }
 
-    public synchronized void demo(int demoType) throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_DEMO);
-            serialConnection.writeByte(demoType);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+    public synchronized void demo(int demoType)
+            throws ConnectionLostException {
+        serialConnection.writeByte(COMMAND_DEMO);
+        serialConnection.writeByte(demoType);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
     public synchronized void setDigitalOutputs(boolean pin0High, boolean pin1High, boolean pin2High)
             throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_DIGITAL_OUTPUTS);
-            serialConnection.writeByte(
-                    (pin0High ? DIGITAL_OUTPUT_PIN0 : 0)
-                    | (pin1High ? DIGITAL_OUTPUT_PIN1 : 0)
-                    | (pin2High ? DIGITAL_OUTPUT_PIN2 : 0));
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+        serialConnection.writeByte(COMMAND_DIGITAL_OUTPUTS);
+        serialConnection.writeByte(
+                (pin0High ? DIGITAL_OUTPUT_PIN0 : 0)
+                | (pin1High ? DIGITAL_OUTPUT_PIN1 : 0)
+                | (pin2High ? DIGITAL_OUTPUT_PIN2 : 0));
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
     public synchronized void drive(int velocity, int radius)
             throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_DRIVE);
-            serialConnection.writeSignedWord(velocity);
-            serialConnection.writeSignedWord(radius);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+        serialConnection.writeByte(COMMAND_DRIVE);
+        serialConnection.writeSignedWord(velocity);
+        serialConnection.writeSignedWord(radius);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
     public synchronized void driveDirect(int rightVelocity, int leftVelocity)
             throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_DRIVE_DIRECT);
-            serialConnection.writeSignedWord(rightVelocity);
-            serialConnection.writeSignedWord(leftVelocity);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+        serialConnection.writeByte(COMMAND_DRIVE_DIRECT);
+        serialConnection.writeSignedWord(rightVelocity);
+        serialConnection.writeSignedWord(leftVelocity);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
     public synchronized void full() throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_MODE_FULL);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+        serialConnection.writeByte(COMMAND_MODE_FULL);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
     public synchronized int getAngle() {
@@ -594,24 +578,24 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
         return getSensorBoolean(SENSORID_wheelDropRight);
     }
 
-    public synchronized void leds(boolean powerLedOn, boolean playLedOn, boolean advanceLedOn) throws ConnectionLostException, InterruptedException {
+    public synchronized void leds(boolean powerLedOn, boolean playLedOn, boolean advanceLedOn) throws ConnectionLostException {
         leds(0, powerLedOn ? 255 : 0, playLedOn, advanceLedOn);
     }
 
-    public synchronized void leds(int powerColor, int powerIntensity, boolean playLedOn, boolean advanceLedOn) throws ConnectionLostException, InterruptedException {
-            serialConnection.writeByte(COMMAND_LEDS);
-            serialConnection.writeByte((advanceLedOn ? LEDS_ADVANCE : 0) | (playLedOn ? LEDS_PLAY : 0));
-            serialConnection.writeByte(powerColor);
-            serialConnection.writeByte(powerIntensity);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-            powerLedColor = powerColor;
-            powerLedIntensity = powerIntensity;
-            isPlayLedOn = playLedOn;
-            isAdvanceLedOn = advanceLedOn;
+    public synchronized void leds(int powerColor, int powerIntensity, boolean playLedOn, boolean advanceLedOn) throws ConnectionLostException {
+        serialConnection.writeByte(COMMAND_LEDS);
+        serialConnection.writeByte((advanceLedOn ? LEDS_ADVANCE : 0) | (playLedOn ? LEDS_PLAY : 0));
+        serialConnection.writeByte(powerColor);
+        serialConnection.writeByte(powerIntensity);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+        powerLedColor = powerColor;
+        powerLedIntensity = powerIntensity;
+        isPlayLedOn = playLedOn;
+        isAdvanceLedOn = advanceLedOn;
     }
 
-    public synchronized void ledsToggle(boolean togglePower, boolean togglePlay, boolean toggleAdvance) 
-            throws ConnectionLostException, InterruptedException  {
+    public synchronized void ledsToggle(boolean togglePower, boolean togglePlay, boolean toggleAdvance)
+            throws ConnectionLostException {
         if (togglePower) {
             powerLedIntensity = powerLedIntensity ^ 0xFF;
         }
@@ -624,81 +608,63 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
         leds(powerLedColor, powerLedIntensity, isPlayLedOn, isAdvanceLedOn);
     }
 
-    public synchronized void lowSideDrivers(boolean lowSideDriver0On, boolean lowSideDriver1On, boolean lowSideDriver2On) throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_LOW_SIDE_DRIVERS);
-            serialConnection.writeByte(
-                    (lowSideDriver0On ? LOW_SIDE_DRIVER0 : 0)
-                    | (lowSideDriver1On ? LOW_SIDE_DRIVER1 : 0)
-                    | (lowSideDriver2On ? LOW_SIDE_DRIVER2 : 0));
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
+    public synchronized void lowSideDrivers(boolean lowSideDriver0On, boolean lowSideDriver1On, boolean lowSideDriver2On)
+            throws ConnectionLostException {
+        serialConnection.writeByte(COMMAND_LOW_SIDE_DRIVERS);
+        serialConnection.writeByte(
+                (lowSideDriver0On ? LOW_SIDE_DRIVER0 : 0)
+                | (lowSideDriver1On ? LOW_SIDE_DRIVER1 : 0)
+                | (lowSideDriver2On ? LOW_SIDE_DRIVER2 : 0));
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+    }
+
+    public synchronized void playScript(byte[] script)
+            throws ConnectionLostException {
+        int count = script.length;
+        serialConnection.writeByte(COMMAND_SCRIPT);
+        serialConnection.writeByte(count);
+        serialConnection.writeBytes(script, 0, count);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+        serialConnection.writeByte(COMMAND_PLAY_SCRIPT);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+    }
+
+    public synchronized void playSong(int songNumber)
+            throws ConnectionLostException {
+        serialConnection.writeByte(COMMAND_PLAY_SONG);
+        serialConnection.writeByte(songNumber);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+    }
+
+    public synchronized void pwmLowSideDrivers(int lowSideDriver0DutyCycle, int lowSideDriver1DutyCycle, int lowSideDriver2DutyCycle)
+            throws ConnectionLostException {
+        serialConnection.writeByte(COMMAND_PWM_LOW_SIDE_DRIVERS);
+        serialConnection.writeByte(lowSideDriver2DutyCycle);
+        serialConnection.writeByte(lowSideDriver1DutyCycle);
+        serialConnection.writeByte(lowSideDriver0DutyCycle);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+    }
+
+    public synchronized void readSensors(int[] sensorIds)
+            throws ConnectionLostException {
+        if (sensorIds.length > serialConnection.getMaxCommandSize() - 2) {
+            throw new IllegalArgumentException("Argument contains too many bytes.");
+        }
+        serialConnection.writeByte(COMMAND_QUERY_LIST);
+        serialConnection.writeByte(sensorIds.length);
+        serialConnection.writeBytes(sensorIds, 0, sensorIds.length);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+        for (int packetId = 0; packetId < sensorIds.length; packetId++) {
+            readSensorData(packetId);
         }
     }
 
-    public synchronized void playScript(byte[] script) throws ConnectionLostException {
-        try {
-            int count = script.length;
-            serialConnection.writeByte(COMMAND_SCRIPT);
-            serialConnection.writeByte(count);
-            serialConnection.writeBytes(script, 0, count);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-            serialConnection.writeByte(COMMAND_PLAY_SCRIPT);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
-    }
-
-    public synchronized void playSong(int songNumber) throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_PLAY_SONG);
-            serialConnection.writeByte(songNumber);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
-    }
-
-    public synchronized void pwmLowSideDrivers(int lowSideDriver0DutyCycle, int lowSideDriver1DutyCycle, int lowSideDriver2DutyCycle) throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_PWM_LOW_SIDE_DRIVERS);
-            serialConnection.writeByte(lowSideDriver2DutyCycle);
-            serialConnection.writeByte(lowSideDriver1DutyCycle);
-            serialConnection.writeByte(lowSideDriver0DutyCycle);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
-    }
-
-    public synchronized void readSensors(int[] sensorIds) throws ConnectionLostException {
-        try {
-            if (sensorIds.length > serialConnection.getMaxCommandSize() - 2) {
-                throw new IllegalArgumentException("Argument contains too many bytes.");
-            }
-            serialConnection.writeByte(COMMAND_QUERY_LIST);
-            serialConnection.writeByte(sensorIds.length);
-            serialConnection.writeBytes(sensorIds, 0, sensorIds.length);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-            for (int packetId = 0; packetId < sensorIds.length; packetId++) {
-                readSensorData(packetId);
-            }
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
-    }
-
-    public synchronized void readSensors(int sensorId) throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_SENSORS);
-            serialConnection.writeByte(sensorId);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-            readSensorData(sensorId);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+    public synchronized void readSensors(int sensorId)
+            throws ConnectionLostException {
+        serialConnection.writeByte(COMMAND_SENSORS);
+        serialConnection.writeByte(sensorId);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
+        readSensorData(sensorId);
     }
 
     private void readSensorData(int sensorId) throws ConnectionLostException {
@@ -857,23 +823,16 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
         }
     }
 
-    public synchronized void safe() throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_MODE_SAFE);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+    public synchronized void safe()
+            throws ConnectionLostException {
+        serialConnection.writeByte(COMMAND_MODE_SAFE);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
     public synchronized void sendIr(int byteValue) throws ConnectionLostException {
-        try {
-            serialConnection.writeByte(COMMAND_SEND_IR);
-            serialConnection.writeByte(byteValue);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+        serialConnection.writeByte(COMMAND_SEND_IR);
+        serialConnection.writeByte(byteValue);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
     private void setSensorBoolean(int sensorId, boolean value) {
@@ -886,43 +845,36 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
 
     public synchronized int[] showScript() throws ConnectionLostException {
         serialConnection.writeByte(COMMAND_SHOW_SCRIPT);
-        try {
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
         int size = serialConnection.readUnsignedByte();
         int[] script = new int[size];
         serialConnection.readUnsignedBytes(script, 0, size);
         return script;
     }
 
-    public synchronized void song(int songNumber, int[] notesAndDurations) throws ConnectionLostException {
+    public synchronized void song(int songNumber, int[] notesAndDurations)
+            throws ConnectionLostException {
         song(songNumber, notesAndDurations, 0, notesAndDurations.length);
     }
 
     public synchronized void song(int songNumber, int[] notesAndDurations, int startIndex, int length) throws ConnectionLostException {
-        try {
-            if (songNumber < 0 || songNumber > 15) {
-                throw new IllegalArgumentException("songNumber " + songNumber);
-            }
-            if ((length & 0x01) == 0x01) {
-                throw new IllegalArgumentException("length " + songNumber + "must be even");
-            }
-            if (length < 1 || length > (256 - (songNumber * 16 * 2))) {
-                throw new IllegalArgumentException("length " + length);
-            }
-            serialConnection.writeByte(COMMAND_SONG);
-            serialConnection.writeByte(songNumber);
-            serialConnection.writeByte(length >> 1);
-            serialConnection.writeBytes(notesAndDurations, startIndex, length);
-            Thread.sleep(AFTER_COMMAND_PAUSE_TIME);
-        } catch (InterruptedException ex) {
-            Log.e(TAG, ex.getMessage());
+        if (songNumber < 0 || songNumber > 15) {
+            throw new IllegalArgumentException("songNumber " + songNumber);
         }
+        if ((length & 0x01) == 0x01) {
+            throw new IllegalArgumentException("length " + songNumber + "must be even");
+        }
+        if (length < 1 || length > (256 - (songNumber * 16 * 2))) {
+            throw new IllegalArgumentException("length " + length);
+        }
+        serialConnection.writeByte(COMMAND_SONG);
+        serialConnection.writeByte(songNumber);
+        serialConnection.writeByte(length >> 1);
+        serialConnection.writeBytes(notesAndDurations, startIndex, length);
+        SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
     }
 
-    public synchronized void waitButtonPressed(boolean playButton, boolean beep) throws ConnectionLostException,  InterruptedException{
+    public synchronized void waitButtonPressed(boolean playButton, boolean beep) throws ConnectionLostException {
         int startingPowerLedIntensity = powerLedIntensity;
         int startingPowerLedColor = powerLedColor;
         boolean startingPlayLedState = isPlayLedOn;
@@ -947,11 +899,7 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
             if (!playButton && isAdvanceButtonDown()) {
                 gotButtonDown = true;
             }
-            try {
-                Thread.sleep(noteDuration);
-            } catch (InterruptedException ex) {
-                Log.e(TAG, ex.getMessage());
-            }
+            SystemClock.sleep(noteDuration);
             totalTimeWaiting += noteDuration;
             if (totalTimeWaiting > 500) {
                 if (beep) {
