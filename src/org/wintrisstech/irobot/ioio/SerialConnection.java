@@ -125,7 +125,7 @@ final class SerialConnection { //Note: Package-private class
         try {
             int result = input.read();
             if (result > 0x7F) {
-                result -= 0xFF;
+                result -= 0x100;
             }
             if (debug) {
                 Log.d(TAG, String.format("Read signed byte: %d", result));
