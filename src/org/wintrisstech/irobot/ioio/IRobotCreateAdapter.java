@@ -257,8 +257,8 @@ public class IRobotCreateAdapter implements IRobotCreateInterface {
         delegate.lowSideDrivers(lowSideDriver0On, lowSideDriver1On, lowSideDriver2On);
     }
 
-    public void playScript(byte[] script) throws ConnectionLostException {
-        delegate.playScript(script);
+    public void playScript(byte[] script, boolean immediateReturn) throws ConnectionLostException {
+        delegate.playScript(script, immediateReturn);
     }
 
     public void playSong(int songNumber) throws ConnectionLostException {
