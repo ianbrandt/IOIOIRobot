@@ -295,8 +295,8 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
      *
      * @param ioio The IOIO instance used to communicate with the Create
      *
-     * @throws ConnectionLostException 
-     * @throws InterruptedException 
+     * @throws ConnectionLostException
+     * @throws InterruptedException
      * @see #SimpleIRobotCreate(boolean, boolean, boolean)
      */
     public SimpleIRobotCreate(IOIO ioio)
@@ -313,8 +313,8 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
      * debug true
      * @param fullMode if true enter full mode, otherwise enter safe mode
      * @param waitButton if true wait until play button is pressed
-     * @throws ConnectionLostException 
-     * @throws InterruptedException  
+     * @throws ConnectionLostException
+     * @throws InterruptedException
      */
     public SimpleIRobotCreate(IOIO ioio, boolean debugSerial, boolean fullMode, boolean waitButton)
             throws ConnectionLostException {
@@ -626,7 +626,9 @@ public final class SimpleIRobotCreate implements IRobotCreateInterface {
         SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
         serialConnection.writeByte(COMMAND_PLAY_SCRIPT);
         SystemClock.sleep(AFTER_COMMAND_PAUSE_TIME);
-        if(!immediateReturn) readSensors(SENSORS_GROUP_ID2);
+        if (!immediateReturn) {
+            readSensors(SENSORS_GROUP_ID2);
+        }
     }
 
     public synchronized void playSong(int songNumber)
