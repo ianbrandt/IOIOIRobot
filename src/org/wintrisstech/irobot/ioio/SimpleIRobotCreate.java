@@ -1,7 +1,6 @@
 package org.wintrisstech.irobot.ioio;
 
 import android.os.SystemClock;
-import android.util.Log;
 import ioio.lib.api.IOIO;
 import ioio.lib.api.exception.ConnectionLostException;
 
